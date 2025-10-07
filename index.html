@@ -65,7 +65,7 @@ small{color:#cbd5e1}
 
 <main class="center">
 
-  <!-- INICIO -->
+  <!-- Inicio -->
   <section id="inicio" class="hero">
     <h1>Bowls frescos, rápidos y personalizados</h1>
     <p>Elige base, proteína, toppings y aderezos. Ingredientes reales, sabor hawaiano.</p>
@@ -80,7 +80,7 @@ small{color:#cbd5e1}
     </div>
   </section>
 
-  <!-- CATÁLOGO -->
+  <!-- Catálogo -->
   <h2 id="catalogo" class="section-title">Catálogo</h2>
   <div class="chips" id="chips">
     <button class="chip active" data-cat="todos">Todos</button>
@@ -93,7 +93,7 @@ small{color:#cbd5e1}
 
   <div id="grid" class="grid"></div>
 
-  <!-- TIENDA / CONTACTO -->
+  <!-- tienda y contacto -->
   <h2 id="tienda" class="section-title">Nuestra tienda</h2>
   <div class="info">
     <div class="tile">
@@ -121,7 +121,7 @@ small{color:#cbd5e1}
   <small>Darío Pavez 11, Paine · +56 9 7746 8219</small>
 </footer>
 
-<!-- MODAL -->
+<!-- Modal -->
 <div id="modal" class="modal" aria-hidden="true">
   <div class="panel">
     <img id="m-img" alt="">
@@ -140,7 +140,7 @@ small{color:#cbd5e1}
 </div>
 
 <script>
-// ====== Datos del catálogo (8 ítems) ======
+// Datos del catálogo
 const productos = [
   {id:1, nombre:"Bowl Clásico",     precio:6990,  cat:["bowls"],      desc:"Arroz sushi, salmón, palta, pepino, sésamo.", 
    img:"https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=1000&q=60"},
@@ -151,13 +151,13 @@ const productos = [
   {id:4, nombre:"Bowl Atún Picante",precio:7590,  cat:["bowls"], desc:"Arroz sushi, atún, sriracha mayo, cebollín.", 
    img:"https://images.unsplash.com/photo-1556761223-4c4282c73f77?auto=format&fit=crop&w=1000&q=60"},
   {id:5, nombre:"Snack Edamame",    precio:2490,  cat:["snacks"], desc:"Edamame al vapor con sal marina.", 
-   img:"https://images.unsplash.com/photo-1601000927369-1b9f68f5b148?auto=format&fit=crop&w=1000&q=60"},
+   img:"https://images.unsplash.com/photo-1617093727343-374698b1c657?auto=format&fit=crop&w=1000&q=60"},
   {id:6, nombre:"Snack Mix de Frutos", precio:2990, cat:["snacks"], desc:"Almendras, nueces y cranberries.", 
    img:"https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=1000&q=60"},
   {id:7, nombre:"Té Helado Artesanal", precio:1990, cat:["bebidas"], desc:"Té negro, limón y miel, bien frío.", 
    img:"https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=1000&q=60"},
-  {id:8, nombre:"Agua con Gas",     precio:1490,  cat:["bebidas"], desc:"Agua mineral gasificada 330ml.", 
-   img:"https://images.unsplash.com/photo-1623065425909-ef9fcfcc7c98?auto=format&fit=crop&w=1000&q=60"},
+  {id:8, nombre:"Agua sin gas",     precio:1290,  cat:["bebidas"], desc:"Agua mineral sin gas 330ml.", 
+   img:"https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=1000&q=60"},
 ];
 
 const grid = document.getElementById('grid');
@@ -170,12 +170,13 @@ const mPrecio = document.getElementById('m-precio');
 const btnAdd = document.getElementById('btn-add');
 const btnClose = document.getElementById('btn-close');
 
-// Render catálogo con filtro
+//catálogo con filtro
 function render(cat="todos"){
   const list = (cat==="todos") ? productos : productos.filter(p=>p.cat.includes(cat));
   grid.innerHTML = list.map(p=>`
     <article class="card" data-id="${p.id}">
-      <img class="thumb" src="${p.img}" alt="${p.nombre}">
+      <img class="thumb" src="${p.img}" alt="${p.nombre}" loading="lazy"
+     onerror="this.onerror=null;this.src='https://via.placeholder.com/800x600?text=Pok%C3%A9+Fresh';">
       <div class="card-body">
         <h3>${p.nombre}</h3>
         <p>${p.desc}</p>
@@ -189,7 +190,7 @@ function render(cat="todos"){
 }
 render();
 
-// Filtro por chips
+// Filtro chips
 chips.addEventListener('click', e=>{
   const c = e.target.closest('.chip'); if(!c) return;
   document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
@@ -198,7 +199,7 @@ chips.addEventListener('click', e=>{
   document.getElementById('catalogo').scrollIntoView({behavior:'smooth'});
 });
 
-// Abrir modal al hacer click en card (excepto botón Agregar)
+// Abrir modal 
 grid.addEventListener('click', e=>{
   const add = e.target.closest('[data-add]');
   if(add){
@@ -208,7 +209,11 @@ grid.addEventListener('click', e=>{
   }
   const card = e.target.closest('.card'); if(!card) return;
   const p = productos.find(x=>x.id==card.dataset.id);
-  mImg.src = p.img; mNombre.textContent = p.nombre;
+  mImg.src = p.img;
+  mImg.alt = p.nombre;
+  mImg.onerror = () => { mImg.src = 'https://via.placeholder.com/1200x800?text=Pok%C3%A9+Fresh'; };
+
+  
   mDesc.textContent = p.desc; mPrecio.textContent = "CLP $" + p.precio.toLocaleString('es-CL');
   btnAdd.onclick = (ev)=>{ev.preventDefault(); alert(`Agregado: ${p.nombre}`);};
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
